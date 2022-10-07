@@ -33,6 +33,14 @@ def convert_entries(entries):
         new_entries['vlan_vid'] = [new_entries['vlan_vid']]
     return new_entries
 
+def convert_list_entries(entries):
+    """ Transform a list of entries dictionary in a list of plain dictionary suitable for
+        matching
+
+    :param entries: list(dict)
+    :return: list(plain dict)
+    """
+    return [convert_entries(entry) for entry in entries]
 
 def find_endpoint(switch, port):
     """ Find where switch/port is connected. If it is another switch,
@@ -53,6 +61,14 @@ def prepare_json(trace_result):
         result.append(trace_step['in'])
     return {'result': result}
 
+def prepare_list_json(traces_result):
+    """Prepare return list of json for REST call."""
+    results = {}
+    for dpid in traces_result:
+        results[dpid] = []
+        for trace_step in traces_result[dpid]:
+            results[dpid].append(trace_step['in'])
+    return results
 
 def format_result(trace):
     """Format the result for automate circuit finding"""
